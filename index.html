@@ -48,39 +48,41 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 .prog-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:2px;transition:width .4s ease;}
 
-/* BRACKET TREE LAYOUT */
+/* BRACKET */
 .bracket-scroll{overflow-x:auto;padding:20px 10px 30px;min-width:100%;}
 .bracket-tree{display:flex;align-items:center;gap:0;min-width:max-content;}
 
-/* COLUMNS */
 .col{display:flex;flex-direction:column;justify-content:space-around;position:relative;}
-.col-r32{gap:6px;}
-.col-r16{gap:12px;}
-.col-qf{gap:48px;}
-.col-sf{gap:128px;}
-.col-final{gap:0;}
-
 .col-label{font-family:'Bebas Neue',sans-serif;font-size:.65rem;letter-spacing:.18em;color:var(--gold);text-align:center;margin-bottom:8px;text-transform:uppercase;}
 
-/* CONNECTORS */
 .connector{display:flex;flex-direction:column;justify-content:space-around;position:relative;}
+.conn-svg{flex-shrink:0;overflow:visible;}
 
 /* MATCH CARD */
-.match{background:var(--card2);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:148px;flex-shrink:0;transition:border-color .2s;position:relative;}
+.match{background:var(--card2);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:160px;flex-shrink:0;transition:border-color .2s;position:relative;cursor:pointer;}
+.match:hover:not(.no-click){border-color:rgba(201,168,76,.5);box-shadow:0 0 10px rgba(201,168,76,.1);}
 .match.has-winner{border-color:rgba(39,174,96,.4);}
-.match.is-final{width:160px;background:linear-gradient(135deg,#100D02,#1A1508);border:1.5px solid var(--gold);}
+.match.is-final{width:172px;background:linear-gradient(135deg,#100D02,#1A1508);border:1.5px solid var(--gold);}
+.match.no-click{cursor:default;}
 
-.match-lbl{font-size:.52rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding:4px 8px 3px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);}
+.match-lbl{font-size:.52rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding:4px 8px 3px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:space-between;}
 .match.is-final .match-lbl{color:var(--gold-light);border-bottom-color:rgba(201,168,76,.2);background:rgba(201,168,76,.04);}
+.match-lbl-text{flex:1;}
+.match-edit-ico{font-size:.6rem;opacity:.4;transition:opacity .2s;}
+.match:hover .match-edit-ico{opacity:.9;}
+
+/* SCORE DISPLAY on card */
+.score-display{display:flex;align-items:center;justify-content:center;padding:2px 0;background:rgba(0,0,0,.25);border-bottom:1px solid var(--border);font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.15em;color:var(--gold-light);gap:6px;}
+.score-display.penalty{background:rgba(52,152,219,.08);color:#5DADE2;}
+.score-display .pen-tag{font-size:.42rem;color:#5DADE2;letter-spacing:.12em;text-transform:uppercase;}
 
 /* TEAM ROW */
-.team{display:flex;align-items:center;padding:7px 8px;cursor:pointer;transition:background .15s;min-height:36px;position:relative;border-bottom:1px solid rgba(37,37,72,.5);}
+.team{display:flex;align-items:center;padding:7px 8px;min-height:36px;position:relative;border-bottom:1px solid rgba(37,37,72,.5);}
 .team:last-child{border-bottom:none;}
-.team:active{background:rgba(255,255,255,.06);}
 .team.winner{background:var(--green-bg);}
-.team.elim{opacity:.22;cursor:default;}
+.team.elim{opacity:.22;}
 .team.elim .t-name{text-decoration:line-through;}
-.team.tbd{cursor:default;opacity:.5;}
+.team.tbd{opacity:.5;}
 .team.path-glow{background:linear-gradient(90deg,rgba(46,204,113,.15),rgba(46,204,113,.03));}
 .team-sep{height:1px;background:rgba(37,37,72,.7);font-family:'Bebas Neue',sans-serif;font-size:.58rem;color:var(--muted);letter-spacing:.2em;text-align:center;padding:2px 0;line-height:1;}
 
@@ -102,16 +104,53 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 .champ-placeholder{text-align:center;padding:16px 14px;min-width:120px;}
 .champ-placeholder p{color:var(--muted);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;line-height:1.8;}
 
-/* SVG CONNECTORS */
-.conn-svg{flex-shrink:0;overflow:visible;}
+/* SCORE MODAL */
+#score-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;padding:16px;}
+#score-modal.show{display:flex;}
+.score-modal-box{background:var(--card);border:1.5px solid var(--gold);border-radius:14px;padding:20px 18px 18px;width:100%;max-width:340px;animation:modalIn .25s cubic-bezier(.22,1,.36,1);}
+@keyframes modalIn{from{opacity:0;transform:scale(.88);}to{opacity:1;transform:scale(1);}}
+.sm-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.14em;color:var(--gold-light);margin-bottom:14px;text-align:center;}
+.sm-teams{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.sm-team{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.sm-flag{font-size:1.6rem;}
+.sm-tname{font-size:.68rem;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;}
+.sm-score-input{width:64px;height:52px;background:var(--card2);border:2px solid var(--border);border-radius:10px;color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:1.8rem;text-align:center;outline:none;transition:border-color .2s;-moz-appearance:textfield;}
+.sm-score-input::-webkit-outer-spin-button,.sm-score-input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.sm-score-input:focus{border-color:var(--gold);}
+.sm-vs{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted);flex-shrink:0;}
+
+/* PENALTY SECTION */
+.sm-pen-section{display:none;margin-top:2px;margin-bottom:12px;background:rgba(52,152,219,.07);border:1px solid rgba(52,152,219,.25);border-radius:10px;padding:12px 14px;}
+.sm-pen-section.show{display:block;}
+.sm-pen-title{font-size:.58rem;color:#5DADE2;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;text-align:center;}
+.sm-pen-row{display:flex;align-items:center;gap:10px;}
+.sm-pen-team{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.sm-pen-name{font-size:.6rem;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;}
+.sm-pen-input{width:56px;height:44px;background:var(--card2);border:2px solid rgba(52,152,219,.35);border-radius:8px;color:#5DADE2;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;text-align:center;outline:none;transition:border-color .2s;-moz-appearance:textfield;}
+.sm-pen-input::-webkit-outer-spin-button,.sm-pen-input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.sm-pen-input:focus{border-color:#5DADE2;}
+.sm-pen-vs{font-family:'Bebas Neue',sans-serif;font-size:.9rem;color:var(--muted);flex-shrink:0;}
+.sm-pen-note{font-size:.55rem;color:var(--muted);text-align:center;margin-top:8px;letter-spacing:.06em;}
+
+.sm-draw-banner{display:none;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:7px;text-align:center;font-size:.6rem;color:var(--gold-light);letter-spacing:.08em;margin-bottom:10px;}
+.sm-draw-banner.show{display:block;}
+
+.sm-actions{display:flex;gap:8px;margin-top:14px;}
+.sm-btn{flex:1;font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.1em;padding:10px;border-radius:8px;border:1.5px solid;cursor:pointer;transition:all .2s;}
+.sm-confirm{border-color:var(--green);color:var(--green);background:transparent;}
+.sm-confirm:hover{background:var(--green);color:#07070F;}
+.sm-cancel{border-color:var(--border);color:var(--muted);background:transparent;}
+.sm-cancel:hover{border-color:var(--text);color:var(--text);}
+.sm-clear{border-color:var(--red);color:var(--red);background:transparent;flex:0;padding:10px 12px;}
+.sm-clear:hover{background:var(--red);color:#fff;}
 
 /* CONFETTI */
 #confetti-cvs{position:fixed;inset:0;pointer-events:none;z-index:999;}
 
-/* MOBILE SCROLL HINT */
+/* SCROLL HINT */
 .scroll-hint{text-align:center;padding:6px;font-size:.58rem;color:var(--muted);letter-spacing:.1em;}
 
-/* EXPORT OVERLAY */
+/* EXPORT */
 #export-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:1000;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;}
 #export-overlay.show{display:flex;}
 #exp-img{max-width:100%;max-height:65vh;border:2px solid var(--gold);border-radius:10px;}
@@ -126,7 +165,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 
 <div class="hdr">
   <h1>🏆 FIFA WORLD CUP 2026</h1>
-  <p>Tap a team to advance • Bracket Challenge</p>
+  <p>Tap a match to predict the score • Bracket Challenge</p>
 </div>
 
 <div class="toolbar">
@@ -147,6 +186,51 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 
 <div class="bracket-scroll" id="bracket-root"></div>
 
+<!-- SCORE PREDICTION MODAL -->
+<div id="score-modal">
+  <div class="score-modal-box">
+    <div class="sm-title" id="sm-title">PREDICT THE SCORE</div>
+    <div class="sm-teams">
+      <div class="sm-team">
+        <div class="sm-flag" id="sm-flag0"></div>
+        <div class="sm-tname" id="sm-tname0"></div>
+        <input class="sm-score-input" id="sm-s0" type="number" min="0" max="99" placeholder="0">
+      </div>
+      <div class="sm-vs">VS</div>
+      <div class="sm-team">
+        <div class="sm-flag" id="sm-flag1"></div>
+        <div class="sm-tname" id="sm-tname1"></div>
+        <input class="sm-score-input" id="sm-s1" type="number" min="0" max="99" placeholder="0">
+      </div>
+    </div>
+
+    <div class="sm-draw-banner" id="sm-draw-banner">⚖️ It's a Draw — Decide the winner on penalties!</div>
+
+    <div class="sm-pen-section" id="sm-pen-section">
+      <div class="sm-pen-title">⚽ Penalty Shootout</div>
+      <div class="sm-pen-row">
+        <div class="sm-pen-team">
+          <div class="sm-pen-name" id="sm-pen-name0"></div>
+          <input class="sm-pen-input" id="sm-p0" type="number" min="0" max="99" placeholder="0">
+        </div>
+        <div class="sm-pen-vs">–</div>
+        <div class="sm-pen-team">
+          <div class="sm-pen-name" id="sm-pen-name1"></div>
+          <input class="sm-pen-input" id="sm-p1" type="number" min="0" max="99" placeholder="0">
+        </div>
+      </div>
+      <div class="sm-pen-note">Enter penalty score (e.g. 5–3). Must not be equal.</div>
+    </div>
+
+    <div class="sm-actions">
+      <button class="sm-btn sm-clear" onclick="clearMatchScore()" title="Clear this match">✕</button>
+      <button class="sm-btn sm-cancel" onclick="closeModal()">Cancel</button>
+      <button class="sm-btn sm-confirm" onclick="confirmScore()">Confirm ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT OVERLAY -->
 <div id="export-overlay">
   <div class="exp-title">🏆 YOUR 2026 BRACKET</div>
   <div style="font-size:.58rem;color:#55559A;letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;">Scroll to see full bracket</div>
@@ -164,36 +248,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-// ─── REAL 2026 WC ROUND OF 32 MATCHUPS (verified from ESPN/FIFA/Sky Sports) ───
-// Left side of bracket (top half)
-const LEFT_R32 = [
-  [{f:"🇿🇦",n:"S. Africa"}, {f:"🇨🇦",n:"Canada"}],      // Match 73
-  [{f:"🇩🇪",n:"Germany"},   {f:"🇵🇾",n:"Paraguay"}],     // Match 74
-  [{f:"🇳🇱",n:"Netherlands"},{f:"🇲🇦",n:"Morocco"}],     // Match 75
-  [{f:"🇧🇷",n:"Brazil"},    {f:"🇯🇵",n:"Japan"}],        // Match 76
-  [{f:"🇨🇮",n:"Ivory Coast"},{f:"🇳🇴",n:"Norway"}],      // Match 78
-  [{f:"🇫🇷",n:"France"},    {f:"🇸🇪",n:"Sweden"}],       // Match 77
-  [{f:"🇲🇽",n:"Mexico"},    {f:"🇪🇨",n:"Ecuador"}],      // Match 79 (3rd place)
-  [{f:"🇺🇸",n:"USA"},       {f:"🇧🇦",n:"Bosnia"}],       // Match 80
-];
-// Right side of bracket (bottom half)
-const RIGHT_R32 = [
-  [{f:"🇧🇪",n:"Belgium"},   {f:"🇸🇳",n:"Senegal"}],      // Match 85
-  [{f:"🇦🇺",n:"Australia"}, {f:"🇪🇬",n:"Egypt"}],        // Match 81
-  [{f:"🇩🇿",n:"Algeria"},   {f:"🇦🇹",n:"Austria"}],      // Match 82 (Austria/Algeria R32)
-  [{f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",n:"England"},  {f:"🇨🇩",n:"DR Congo"}],     // Match 80 (Eng vs Congo DR)
-  [{f:"🇦🇷",n:"Argentina"}, {f:"🇨🇻",n:"Cabo Verde"}],   // Match 86 – Argentina vs Cabo Verde ✅
-  [{f:"🇪🇸",n:"Spain"},     {f:"🇦🇹",n:"Austria"}],      // Match 84 – Spain vs Austria
-  [{f:"🇨🇴",n:"Colombia"},  {f:"🇵🇹",n:"Portugal"}],     // Match 83
-  [{f:"🇭🇷",n:"Croatia"},   {f:"🇬🇭",n:"Ghana"}],        // Match 88
-];
-
-// Note: Algeria vs Austria appears in two different contexts – Algeria/Austria in Group J;
-// Spain beats Group J winner; using correct verified matchups from ESPN:
-// Match 84: Winner Group H (Spain) vs Runner-up Group J (Austria)
-// Match 82: Winner Group G (Belgium? / Algeria) – using Algeria vs Austria as group J runnerup
-// Correcting to fully verified matches from sources:
-// Let me use the exact ESPN-confirmed R32 pairs:
+// ─── MATCH DATA ───
 const FINAL_L = [
   [{f:"🇿🇦",n:"S. Africa"},     {f:"🇨🇦",n:"Canada"}],
   [{f:"🇩🇪",n:"Germany"},       {f:"🇵🇾",n:"Paraguay"}],
@@ -204,7 +259,6 @@ const FINAL_L = [
   [{f:"🇲🇽",n:"Mexico"},        {f:"🇪🇨",n:"Ecuador"}],
   [{f:"🇺🇸",n:"USA"},           {f:"🇧🇦",n:"Bosnia"}],
 ];
-
 const FINAL_R = [
   [{f:"🇧🇪",n:"Belgium"},       {f:"🇸🇳",n:"Senegal"}],
   [{f:"🇦🇺",n:"Australia"},     {f:"🇪🇬",n:"Egypt"}],
@@ -216,38 +270,154 @@ const FINAL_R = [
   [{f:"🇨🇴",n:"Colombia"},      {f:"🇬🇭",n:"Ghana"}],
 ];
 
-// STATE
-// rounds[0] = R32 (16 matches), rounds[1] = R16 (8), rounds[2] = QF (4), rounds[3] = SF (2), rounds[4] = Final (1)
+// STATE — each match now tracks score too
 let rounds, champion;
 
 function freshState(){
   const r32 = [];
-  FINAL_L.forEach(p => r32.push({t0:p[0], t1:p[1], winner:null}));
-  FINAL_R.forEach(p => r32.push({t0:p[0], t1:p[1], winner:null}));
+  FINAL_L.forEach(p => r32.push(newMatch(p[0], p[1])));
+  FINAL_R.forEach(p => r32.push(newMatch(p[0], p[1])));
   rounds = [
     r32,
-    Array(8).fill(0).map(()=>({t0:null,t1:null,winner:null})),
-    Array(4).fill(0).map(()=>({t0:null,t1:null,winner:null})),
-    Array(2).fill(0).map(()=>({t0:null,t1:null,winner:null})),
-    [{t0:null,t1:null,winner:null}],
+    Array(8).fill(0).map(()=>newMatch(null,null)),
+    Array(4).fill(0).map(()=>newMatch(null,null)),
+    Array(2).fill(0).map(()=>newMatch(null,null)),
+    [newMatch(null,null)],
   ];
   champion = null;
 }
 
-function pickWinner(ri, mi, slot){
+function newMatch(t0, t1){
+  return {t0, t1, winner:null, score0:null, score1:null, pen0:null, pen1:null, isPenalty:false};
+}
+
+// ─── MODAL STATE ───
+let modalRi = null, modalMi = null;
+
+function openScoreModal(ri, mi){
   const m = rounds[ri][mi];
-  const team = slot===0 ? m.t0 : m.t1;
-  if(!team) return;
-  const oldWinner = m.winner;
-  m.winner = team;
-  if(oldWinner && oldWinner.n !== team.n){
-    clearDownstream(ri, mi, oldWinner);
+  if(!m.t0 || !m.t1) return; // can't predict TBD matches
+  modalRi = ri;
+  modalMi = mi;
+
+  document.getElementById('sm-title').textContent = 'PREDICT THE SCORE';
+  document.getElementById('sm-flag0').textContent = m.t0.f;
+  document.getElementById('sm-tname0').textContent = m.t0.n;
+  document.getElementById('sm-flag1').textContent = m.t1.f;
+  document.getElementById('sm-tname1').textContent = m.t1.n;
+  document.getElementById('sm-pen-name0').textContent = m.t0.n;
+  document.getElementById('sm-pen-name1').textContent = m.t1.n;
+
+  // Pre-fill existing values
+  document.getElementById('sm-s0').value = m.score0 !== null ? m.score0 : '';
+  document.getElementById('sm-s1').value = m.score1 !== null ? m.score1 : '';
+  document.getElementById('sm-p0').value = m.pen0 !== null ? m.pen0 : '';
+  document.getElementById('sm-p1').value = m.pen1 !== null ? m.pen1 : '';
+
+  updatePenaltyVisibility();
+
+  document.getElementById('score-modal').classList.add('show');
+
+  // Listen for score changes to show penalty section
+  document.getElementById('sm-s0').oninput = updatePenaltyVisibility;
+  document.getElementById('sm-s1').oninput = updatePenaltyVisibility;
+
+  // Auto-focus first input
+  setTimeout(()=>document.getElementById('sm-s0').focus(), 80);
+}
+
+function updatePenaltyVisibility(){
+  const s0 = document.getElementById('sm-s0').value;
+  const s1 = document.getElementById('sm-s1').value;
+  const isDraw = s0 !== '' && s1 !== '' && parseInt(s0) === parseInt(s1);
+  const penSection = document.getElementById('sm-pen-section');
+  const drawBanner = document.getElementById('sm-draw-banner');
+  if(isDraw){
+    penSection.classList.add('show');
+    drawBanner.classList.add('show');
+  } else {
+    penSection.classList.remove('show');
+    drawBanner.classList.remove('show');
+    document.getElementById('sm-p0').value = '';
+    document.getElementById('sm-p1').value = '';
   }
-  propagateWinner(ri, mi, team);
-  if(ri===4){ champion=team; setTimeout(launchConfetti,100); }
+}
+
+function closeModal(){
+  document.getElementById('score-modal').classList.remove('show');
+  modalRi = null; modalMi = null;
+}
+
+function clearMatchScore(){
+  if(modalRi === null) return;
+  const m = rounds[modalRi][modalMi];
+  const oldWinner = m.winner;
+  m.score0 = null; m.score1 = null;
+  m.pen0 = null; m.pen1 = null;
+  m.isPenalty = false;
+  m.winner = null;
+  if(oldWinner) clearDownstream(modalRi, modalMi, oldWinner);
+  closeModal();
   render();
 }
 
+function confirmScore(){
+  if(modalRi === null) return;
+  const m = rounds[modalRi][modalMi];
+  const s0raw = document.getElementById('sm-s0').value;
+  const s1raw = document.getElementById('sm-s1').value;
+
+  if(s0raw === '' || s1raw === '') {
+    alert('Please enter scores for both teams.');
+    return;
+  }
+  const s0 = parseInt(s0raw);
+  const s1 = parseInt(s1raw);
+  if(isNaN(s0)||isNaN(s1)||s0<0||s1<0){ alert('Please enter valid scores.'); return; }
+
+  const isDraw = s0 === s1;
+  let winner;
+  let pen0 = null, pen1 = null, isPenalty = false;
+
+  if(isDraw){
+    const p0raw = document.getElementById('sm-p0').value;
+    const p1raw = document.getElementById('sm-p1').value;
+    if(p0raw === '' || p1raw === ''){
+      alert('It\'s a draw! Please enter the penalty shootout scores.');
+      return;
+    }
+    pen0 = parseInt(p0raw);
+    pen1 = parseInt(p1raw);
+    if(isNaN(pen0)||isNaN(pen1)||pen0<0||pen1<0){ alert('Please enter valid penalty scores.'); return; }
+    if(pen0 === pen1){ alert('Penalty scores cannot be equal — someone must win!'); return; }
+    isPenalty = true;
+    winner = pen0 > pen1 ? m.t0 : m.t1;
+  } else {
+    winner = s0 > s1 ? m.t0 : m.t1;
+  }
+
+  const oldWinner = m.winner;
+  m.score0 = s0; m.score1 = s1;
+  m.pen0 = pen0; m.pen1 = pen1;
+  m.isPenalty = isPenalty;
+
+  if(oldWinner && oldWinner.n !== winner.n){
+    clearDownstream(modalRi, modalMi, oldWinner);
+  }
+  m.winner = winner;
+  propagateWinner(modalRi, modalMi, winner);
+  if(modalRi === 4){ champion = winner; setTimeout(launchConfetti, 100); }
+
+  closeModal();
+  render();
+}
+
+// Close modal on backdrop click
+document.getElementById('score-modal').addEventListener('click', function(e){
+  if(e.target === this) closeModal();
+});
+
+// ─── BRACKET LOGIC ───
 function propagateWinner(ri, mi, team){
   if(ri>=4) return;
   const ni = Math.floor(mi/2);
@@ -267,6 +437,9 @@ function clearDownstream(ri, mi, oldTeam){
     if(next.winner && next.winner.n === oldTeam.n){
       const nw = next.winner;
       next.winner = null;
+      next.score0 = null; next.score1 = null;
+      next.pen0 = null; next.pen1 = null;
+      next.isPenalty = false;
       clearDownstream(ri+1, ni, nw);
     }
   }
@@ -296,183 +469,164 @@ function render(){
   root.innerHTML = '';
   const path = getChampPath();
 
-  // Build the tree horizontally: R32 | conn | R16 | conn | QF | conn | SF | conn | F | champion
   const tree = document.createElement('div');
   tree.style.cssText = 'display:flex;align-items:center;gap:0;min-width:max-content;padding:10px 16px;';
 
-  // Helper: make a column of matches
-  function makeMatchCol(rndIdx, matchIndices, label, extraClass=''){
-    const col = document.createElement('div');
-    col.style.cssText = `display:flex;flex-direction:column;gap:${getGap(rndIdx)}px;`;
+  function getGap(ri){ return [6,18,56,160,0][ri] || 6; }
 
-    const lbl = document.createElement('div');
-    lbl.className='col-label';
-    lbl.textContent=label;
-    // We'll put labels above via a wrapper
+  function makeMatchColDirect(ri, indices, label, path, isFinal=false){
+    const gap = getGap(ri);
     const wrap = document.createElement('div');
     wrap.style.cssText='display:flex;flex-direction:column;align-items:center;';
-    
     const lblEl = document.createElement('div');
-    lblEl.style.cssText='font-family:"Bebas Neue",sans-serif;font-size:.6rem;letter-spacing:.18em;color:#C9A84C;text-align:center;margin-bottom:6px;text-transform:uppercase;';
+    lblEl.style.cssText='font-family:"Bebas Neue",sans-serif;font-size:.58rem;letter-spacing:.16em;color:'+(isFinal?'#F5D980':'#C9A84C')+';text-align:center;margin-bottom:5px;white-space:nowrap;';
     lblEl.textContent=label;
     wrap.appendChild(lblEl);
+    const col = document.createElement('div');
+    col.style.cssText=`display:flex;flex-direction:column;gap:${gap}px;`;
+    indices.forEach(mi=>{ col.appendChild(makeMatchCard(ri, mi, path, isFinal)); });
     wrap.appendChild(col);
-    
-    matchIndices.forEach(mi=>{
-      col.appendChild(makeMatchCard(rndIdx, mi, path, rndIdx===4));
-    });
     return wrap;
   }
 
-  function getGap(ri){
-    return [6,20,60,176,0][ri] || 6;
+  function makeMatchCard(ri, mi, path, isFinal=false){
+    const m = rounds[ri][mi];
+    const hasBothTeams = m.t0 && m.t1;
+    const card = document.createElement('div');
+    card.className='match'+(m.winner?' has-winner':'')+(isFinal?' is-final':'')+(hasBothTeams?'':' no-click');
+
+    // Label row
+    const lbl = document.createElement('div');
+    lbl.className='match-lbl';
+    const roundNames=['R32','R16','QF','SF','Final'];
+    const lblText = document.createElement('span');
+    lblText.className='match-lbl-text';
+    lblText.textContent = isFinal ? '⚽ Grand Final' : roundNames[ri]+' · M'+(mi+1);
+    lbl.appendChild(lblText);
+    if(hasBothTeams){
+      const editIco = document.createElement('span');
+      editIco.className='match-edit-ico';
+      editIco.textContent='✏️';
+      lbl.appendChild(editIco);
+    }
+    card.appendChild(lbl);
+
+    // Score display (if predicted)
+    if(m.winner && m.score0 !== null){
+      const sd = document.createElement('div');
+      sd.className='score-display'+(m.isPenalty?' penalty':'');
+      if(m.isPenalty){
+        sd.innerHTML=`${m.score0} – ${m.score1} <span class="pen-tag">AET</span> &nbsp; (${m.pen0}–${m.pen1} <span class="pen-tag">PEN</span>)`;
+      } else {
+        sd.textContent=`${m.score0} – ${m.score1}`;
+      }
+      card.appendChild(sd);
+    }
+
+    // Team rows
+    [0,1].forEach(ti=>{
+      if(ti===1){
+        const sep=document.createElement('div');
+        sep.className='team-sep';
+        sep.textContent='VS';
+        card.appendChild(sep);
+      }
+      const team = ti===0?m.t0:m.t1;
+      const isWin = m.winner&&team&&m.winner.n===team.n;
+      const isElim = m.winner&&team&&m.winner.n!==team.n;
+      const isPath = isWin && path.has(team&&team.n);
+      const row = document.createElement('div');
+      row.className='team'+(isWin?' winner':'')+(isElim?' elim':'')+(isPath?' path-glow':'')+((!team)?' tbd':'');
+      let ico='';
+      if(isWin) ico=`<span class="t-ico ${isPath?'s':'w'}">${isPath?'★':'✓'}</span>`;
+      else if(isElim) ico='<span class="t-ico l">✗</span>';
+      row.innerHTML=`<div class="t-flag">${team?team.f:'🏴'}</div><div class="t-name">${team?team.n:'TBD'}</div>${ico}`;
+      card.appendChild(row);
+    });
+
+    // Click to open score modal
+    if(hasBothTeams){
+      card.onclick = () => openScoreModal(ri, mi);
+    }
+    return card;
   }
 
-  // R32 left (matches 0-7)
   const r32L = makeMatchColDirect(0, [0,1,2,3,4,5,6,7], 'Round of 32', path);
-  // connector
-  const c1L = makeSVGConnectors(8, 0, false);
-  // R16 left (matches 0-3)
+  const c1L  = makeSVGConnectors(8, 0, false);
   const r16L = makeMatchColDirect(1, [0,1,2,3], 'Round of 16', path);
-  const c2L = makeSVGConnectors(4, 1, false);
-  // QF left (matches 0-1)
-  const qfL = makeMatchColDirect(2, [0,1], 'Quarterfinals', path);
-  const c3L = makeSVGConnectors(2, 2, false);
-  // SF left (match 0)
-  const sfL = makeMatchColDirect(3, [0], 'Semifinals', path);
-  const c4L = makeSVGConnectors(1, 3, false);
-  // Final
-  const fin = makeMatchColDirect(4, [0], '⚽ Final', path, true);
-  // Champion
+  const c2L  = makeSVGConnectors(4, 1, false);
+  const qfL  = makeMatchColDirect(2, [0,1], 'Quarterfinals', path);
+  const c3L  = makeSVGConnectors(2, 2, false);
+  const sfL  = makeMatchColDirect(3, [0], 'Semifinals', path);
+  const c4L  = makeSVGConnectors(1, 3, false);
+  const fin  = makeMatchColDirect(4, [0], '⚽ Final', path, true);
   const champEl = makeChampion();
-  // SF right (match 1)
-  const c4R = makeSVGConnectors(1, 3, true);
-  const sfR = makeMatchColDirect(3, [1], 'Semifinals', path);
-  const c3R = makeSVGConnectors(2, 2, true);
-  // QF right (matches 2-3)
-  const qfR = makeMatchColDirect(2, [2,3], 'Quarterfinals', path);
-  const c2R = makeSVGConnectors(4, 1, true);
-  // R16 right (matches 4-7)
+  const c4R  = makeSVGConnectors(1, 3, true);
+  const sfR  = makeMatchColDirect(3, [1], 'Semifinals', path);
+  const c3R  = makeSVGConnectors(2, 2, true);
+  const qfR  = makeMatchColDirect(2, [2,3], 'Quarterfinals', path);
+  const c2R  = makeSVGConnectors(4, 1, true);
   const r16R = makeMatchColDirect(1, [4,5,6,7], 'Round of 16', path);
-  const c1R = makeSVGConnectors(8, 0, true);
-  // R32 right (matches 8-15)
+  const c1R  = makeSVGConnectors(8, 0, true);
   const r32R = makeMatchColDirect(0, [8,9,10,11,12,13,14,15], 'Round of 32', path);
 
   [r32L,c1L,r16L,c2L,qfL,c3L,sfL,c4L,fin,champEl,c4R,sfR,c3R,qfR,c2R,r16R,c1R,r32R].forEach(el=>{
     if(el) tree.appendChild(el);
   });
-
   root.appendChild(tree);
 
-  // Progress
   const picks = countPicks();
   document.getElementById('prog-val').textContent = picks + ' / 31 picks';
   document.getElementById('prog-fill').style.width = (picks/31*100)+'%';
   const expBtn = document.getElementById('exp-btn');
-  const hint = document.getElementById('tb-hint');
+  const hint   = document.getElementById('tb-hint');
   if(champion){
     expBtn.disabled=false;
     hint.textContent=champion.f+' '+champion.n+' — Champion!';
   } else {
     expBtn.disabled=true;
-    hint.textContent='Pick a champion to export';
+    hint.textContent='Tap a match to predict the score';
   }
 }
 
-function makeMatchColDirect(ri, indices, label, path, isFinal=false){
-  const gap = [6,18,56,160,0][ri] || 6;
+function makeChampion(){
   const wrap = document.createElement('div');
-  wrap.style.cssText='display:flex;flex-direction:column;align-items:center;';
-  
-  const lblEl = document.createElement('div');
-  lblEl.style.cssText='font-family:"Bebas Neue",sans-serif;font-size:.58rem;letter-spacing:.16em;color:'+(isFinal?'#F5D980':'#C9A84C')+';text-align:center;margin-bottom:5px;white-space:nowrap;';
-  lblEl.textContent=label;
-  wrap.appendChild(lblEl);
-
-  const col = document.createElement('div');
-  col.style.cssText=`display:flex;flex-direction:column;gap:${gap}px;`;
-  
-  indices.forEach(mi=>{
-    col.appendChild(makeMatchCard(ri, mi, path, isFinal));
-  });
-  wrap.appendChild(col);
+  wrap.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;margin-top:22px;';
+  if(champion){
+    wrap.innerHTML=`<div class="champ-box">
+      <div class="champ-trophy">🏆</div>
+      <span class="champ-flag">${champion.f}</span>
+      <div class="champ-name">${champion.n}</div>
+      <div class="champ-sub">World Champion 2026</div>
+    </div>`;
+  } else {
+    wrap.innerHTML=`<div class="champ-placeholder"><p>🏆<br>Crown<br>Your<br>Champion</p></div>`;
+  }
   return wrap;
 }
 
-function makeMatchCard(ri, mi, path, isFinal=false){
-  const m = rounds[ri][mi];
-  const card = document.createElement('div');
-  card.className='match'+(m.winner?' has-winner':'')+(isFinal?' is-final':'');
-
-  const lbl = document.createElement('div');
-  lbl.className='match-lbl';
-  const roundNames=['R32','R16','QF','SF','Final'];
-  lbl.textContent = isFinal ? '⚽ Grand Final' : roundNames[ri]+' · M'+(mi+1);
-  card.appendChild(lbl);
-
-  [0,1].forEach(ti=>{
-    if(ti===1){
-      const sep=document.createElement('div');
-      sep.className='team-sep';
-      sep.textContent='VS';
-      card.appendChild(sep);
-    }
-    const team = ti===0?m.t0:m.t1;
-    const isWin = m.winner&&team&&m.winner.n===team.n;
-    const isElim = m.winner&&team&&m.winner.n!==team.n;
-    const isPath = isWin && path.has(team&&team.n);
-
-    const row = document.createElement('div');
-    row.className='team'+(isWin?' winner':'')+(isElim?' elim':'')+(isPath?' path-glow':'')+((!team)?' tbd':'');
-    
-    if(team && !isElim) row.onclick=()=>pickWinner(ri,mi,ti);
-
-    let ico='';
-    if(isWin) ico=`<span class="t-ico ${isPath?'s':'w'}">${isPath?'★':'✓'}</span>`;
-    else if(isElim) ico='<span class="t-ico l">✗</span>';
-
-    row.innerHTML=`<div class="t-flag">${team?team.f:'🏴'}</div><div class="t-name">${team?team.n:'TBD'}</div>${ico}`;
-    card.appendChild(row);
-  });
-  return card;
-}
-
 function makeSVGConnectors(matchCount, ri, isRight){
-  // Draw bracket connector lines
-  const matchH = 36*2+1+8+4; // approx card height
+  const matchH = 36*2+1+8+4;
   const gapArr = [6,18,56,160,0];
   const gap = gapArr[ri];
-  const pairGap = gapArr[ri+1] || 0;
-  
   const n = matchCount;
   const totalH = n*matchH + (n-1)*gap;
   const w = 22;
-
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('width',w);
   svg.setAttribute('height',totalH+40);
   svg.style.flexShrink='0';
   svg.style.alignSelf='center';
-  svg.style.marginTop='22px'; // offset for label
-
-  const color='#252548';
+  svg.style.marginTop='22px';
   const color2='rgba(201,168,76,.25)';
-
-  // For each pair of matches, draw connector to center
   for(let i=0;i<n;i+=2){
-    const c1 = (i*(matchH+gap)) + matchH/2;
-    const c2 = ((i+1)*(matchH+gap)) + matchH/2;
-    const mid = (c1+c2)/2;
-
+    const c1=(i*(matchH+gap))+matchH/2;
+    const c2=((i+1)*(matchH+gap))+matchH/2;
     if(!isRight){
-      // Lines going right →
-      // Horizontal from match center to right edge
       appendLine(svg,0,c1,w,c1,color2);
       appendLine(svg,0,c2,w,c2,color2);
-      // Vertical joining them
       appendLine(svg,w,c1,w,c2,color2);
     } else {
-      // Lines going left ←
       appendLine(svg,0,c1,w,c1,color2);
       appendLine(svg,0,c2,w,c2,color2);
       appendLine(svg,0,c1,0,c2,color2);
@@ -487,23 +641,6 @@ function appendLine(svg,x1,y1,x2,y2,color){
   line.setAttribute('x2',x2);line.setAttribute('y2',y2);
   line.setAttribute('stroke',color);line.setAttribute('stroke-width','1.5');
   svg.appendChild(line);
-}
-
-function makeChampion(){
-  const wrap = document.createElement('div');
-  wrap.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;margin-top:22px;';
-
-  if(champion){
-    wrap.innerHTML=`<div class="champ-box">
-      <div class="champ-trophy">🏆</div>
-      <span class="champ-flag">${champion.f}</span>
-      <div class="champ-name">${champion.n}</div>
-      <div class="champ-sub">World Champion 2026</div>
-    </div>`;
-  } else {
-    wrap.innerHTML=`<div class="champ-placeholder"><p>🏆<br>Crown<br>Your<br>Champion</p></div>`;
-  }
-  return wrap;
 }
 
 // ─── CONFETTI ───
@@ -528,68 +665,31 @@ function animCon(){
 async function doExport(){
   const btn=document.getElementById('exp-btn');
   btn.textContent='⏳';btn.disabled=true;
-
   try{
-    const target = document.getElementById('bracket-root');
-    const fullW = target.scrollWidth;
-    const fullH = target.scrollHeight;
-
-    // Clone into a temp container that is fully visible (no overflow clipping)
-    const tmp = document.createElement('div');
-    tmp.style.cssText = `position:fixed;left:-99999px;top:0;width:${fullW}px;height:${fullH}px;overflow:visible;background:#07070F;z-index:-1;`;
-    const clone = target.cloneNode(true);
-    clone.style.cssText = `width:${fullW}px;overflow:visible;`;
+    const target=document.getElementById('bracket-root');
+    const fullW=target.scrollWidth, fullH=target.scrollHeight;
+    const tmp=document.createElement('div');
+    tmp.style.cssText=`position:fixed;left:-99999px;top:0;width:${fullW}px;height:${fullH}px;overflow:visible;background:#07070F;z-index:-1;`;
+    const clone=target.cloneNode(true);
+    clone.style.cssText=`width:${fullW}px;overflow:visible;`;
     tmp.appendChild(clone);
     document.body.appendChild(tmp);
-
-    // Small delay so layout settles
     await new Promise(r=>setTimeout(r,80));
-
-    const canvas = await html2canvas(tmp, {
-      backgroundColor:'#07070F',
-      scale:1.5,
-      useCORS:true,
-      allowTaint:true,
-      logging:false,
-      width:fullW,
-      height:fullH,
-      windowWidth:fullW,
-      windowHeight:fullH,
-      x:0,y:0,
-      scrollX:0,scrollY:0
-    });
-
+    const canvas=await html2canvas(tmp,{backgroundColor:'#07070F',scale:1.5,useCORS:true,allowTaint:true,logging:false,width:fullW,height:fullH,windowWidth:fullW,windowHeight:fullH,x:0,y:0,scrollX:0,scrollY:0});
     document.body.removeChild(tmp);
-
-    const url = canvas.toDataURL('image/png');
-    document.getElementById('exp-img').src = url;
-
-    // iOS Safari doesn't support <a download> for data URIs.
-    // Detect iOS and show image-only overlay with save instructions.
-    const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-    const dl = document.getElementById('dl-link');
-    const iosNote = document.getElementById('ios-note');
-
-    if(isIOS){
-      dl.style.display='none';
-      iosNote.style.display='block';
-    } else {
-      dl.style.display='inline-block';
-      dl.href=url;
-      dl.download='WC2026_bracket.png';
-      iosNote.style.display='none';
-    }
-
+    const url=canvas.toDataURL('image/png');
+    document.getElementById('exp-img').src=url;
+    const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    const dl=document.getElementById('dl-link');
+    const iosNote=document.getElementById('ios-note');
+    if(isIOS){dl.style.display='none';iosNote.style.display='block';}
+    else{dl.style.display='inline-block';dl.href=url;dl.download='WC2026_bracket.png';iosNote.style.display='none';}
     document.getElementById('export-overlay').classList.add('show');
-  } catch(e){
-    alert('Could not generate image. Try a screenshot instead.');
-  }
-
-  btn.textContent='📸 Save';
-  btn.disabled=false;
+  } catch(e){ alert('Could not generate image. Try a screenshot instead.'); }
+  btn.textContent='📸 Save';btn.disabled=false;
 }
-function closeExport(){document.getElementById('export-overlay').classList.remove('show');}
-function resetBracket(){freshState();render();}
+function closeExport(){ document.getElementById('export-overlay').classList.remove('show'); }
+function resetBracket(){ freshState(); render(); }
 
 freshState();
 render();
